@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Elenium fireworks</title>
+    <link href="static/css/fliptimer.css"  rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="static/css/style.css" />
+    <link rel="stylesheet" href="static/css/font.css" />
+    <link rel="stylesheet" href="http://hovertree.com/texiao/css3/1/css/style.css" media="screen" type="text/css" />
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        html, body  {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-size: 100px;
+        }
+
+        .scroll-box{
+            height: 100%;
+            width: 100%;
+            transition: all 0.5s ease-in-out;
+        }
+
+        canvas {
+            position: absolute;
+            z-index: 9;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .arrow{
+            display: none;
+            height: 60px;
+            text-align: center;
+            width: 100px;
+            line-height: 100px;
+            font-size: 0.6rem;
+            text-shadow: 5px 5px 5px rgba(0,0,0,0.3);
+            color: #f2f2f2;
+            opacity: 0.8;
+            position: fixed;
+            z-index: 30;
+            bottom: 1.5em;
+            left: 50%;
+            transform: rotate(90deg) scaleY(1.5) translateX(-50%);
+            animation:myarrow 2s infinite linear ;
+            -webkit-animation:myarrow 1s infinite linear ;
+        }
+
+
+       @keyframes myarrow
+        {
+        0% {
+            bottom:1.5em
+        }
+        50% {
+            bottom:1em
+        }
+        100% {
+            bottom:1.5em
+        }}
+
+        .fixed-warp{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .dowebok {
+            display: flex;
+            width: 653px;
+            height: 100px;
+        }
+        .dowebok .days,.dowebok .hours,.dowebok .minutes{
+            margin-right: 20px;
+        }
+
+
+        .route-tiem{ 
+            font-size: 25em; 
+            margin: 200px auto; 
+         }
+
+
+
+        /* @keyframes mymove
+        {
+        0% {
+            transform: rotate3d(0,0,0,180deg);
+        }
+        20% {
+            transform: rotate3d(0,0,0,180deg);
+        }
+        30% {
+            transform: rotate3d(0,0,1,180deg);
+        }
+        40% {
+            transform: rotate3d(0,0,2,180deg);
+        }
+        50% {
+            transform: rotate3d(1,1,1,180deg);
+        }
+        60% {
+            transform: rotate3d(-1,-1,-1,180deg);
+        }
+        70% {
+            transform: rotate3d(-1,-1,-1,180deg);
+        }
+        80% {
+            transform: rotate3d(0,-1,0,180deg);
+        }
+        100% {
+            transform: rotate3d(0,0,0,180deg);
+            transform: rotate3d(0deg,0deg,0deg);
+        }
+        }
+
+      */
+     
+ 
+      #protect,#rocket, #time,#rocket-bg{
+        background:#000 top left no-repeat;
+        background-size: 100% auto;
+      }
+
+      /* #protect{
+        background-image: url('./static/images/bg2.png') ;
+      }
+      #time{
+        background-image: url('./static/images/bg3.png');
+      }
+     */
+      #rocket-bg{
+        position: absolute;
+        z-index: 10;
+        width: 100%;
+        height: 30%;
+        top: 0%;
+        left: 50%;
+        transform: translate(-50%,0);
+        background-position: 50% left;
+        background-repeat: no-repeat;
+        /* background-image: url('./static/images/bg.png'); */
+        background-size: 100% auto;
+      }
+
+
+      .loading {
+        position: absolute;
+        height: 0.5rem;
+        z-index: 12;
+        width: 70%;
+        top: 35%;
+        left:50%;
+        transform: translate(-50%,0);
+        background: #000;
+        height: 5px;
+        border-radius: 3px;
+        border-left: 1px solid #111;
+        border-top: 1px solid #111;
+        border-right: 1px solid #333;
+        border-bottom: 1px solid #333;
+      }
+      .loading .line{
+        height: 0.04rem;
+        margin: 2px 0;
+        width: 0%;
+        background: #2187e7;
+        box-shadow: 0px 0px 10px 1px rgb(0 198 255 / 40%);
+      }
+      .loading-text{
+          font-size: 0.4rem;
+          color: #fff;
+          text-align: center;
+          margin-bottom: 0.1rem;
+      }
+    </style>
+
+
+</head>
+<body>
+
+<div class="loading">
+    <div class="loading-text">0%</div>
+    <div class="line"> </div>
+</div>
+
+<div class="scroll-box">
+
+    <div id="rocket" class="container" >
+        <div id="rocket-bg"></div>
+        <canvas class="canvas-view"></canvas>
+        <canvas class="canvas-view"></canvas>
+        <canvas class="canvas-view"></canvas>
+    </div>
+    <div id="protect" class="container">
+        <canvas id="pinkboard"></canvas>
+    </div>
+    <div id="time" class="container" >
+        <div class="fixed-warp">
+            <div class="text route-tiem" ></div>
+            <div class="dowebok" >
+                <div class="days"></div>
+                <div class="hours"></div>
+                <div class="minutes"></div>
+                <div class="seconds"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="arrow"> >> </div>
+<script>
+    // const text = '0';
+    const text = 'LOVE YOU  WXA';
+</script>
+<!--烟花-->
+<script src="static/js/rocket.js"></script>
+<!--心-->
+<script src="static/js/protect.js"></script>
+<script src="static/js/jquery-1.11.3.min.js"></script>
+<script src="static/js/jquery.fliptimer.js"></script>
+
+<script>
+    let $line = $('.loading .line');
+    let $text = $('.loading .loading-text');
+    let num = 0;
+    let tiemr ;
+    let anima = ()=>{
+
+    $text.text((num++)+'%');
+    $line.css({width:num+'%'})
+
+    if(num===99||tiemr===-1){
+        cancelAnimationFrame(tiemr)
+    }else{
+        requestAnimationFrame(anima)
+    }
+}
+    tiemr = requestAnimationFrame(anima)
+
+
+    let Image1 = new Image();
+    let Image2 = new Image();
+    let Image3 = new Image();
+
+
+    Promise.all([
+        new Promise((reslove,reject)=>{
+            Image1.src = './static/images/bg.png'
+            Image1.onload = ()=>{
+
+                reslove()
+            }
+        }),
+        new Promise((reslove,reject)=>{
+            Image2.src = './static/images/bg2.png'
+            Image2.onload = ()=>{
+                reslove()
+            }
+        }),
+        new Promise((reslove,reject)=>{
+            Image3.src = './static/images/bg3.png'
+            Image3.onload = ()=>{
+                reslove()
+            }
+        })
+    ]).then((res)=>{
+  
+        tiemr = -1
+     
+        setTimeout(()=>{
+            $text.text('100%');
+            $line.css('width','100%');
+        },100)
+ 
+
+        setTimeout(()=>{
+            $('.loading').hide()
+            $('#protect').css({
+                backgroundImage:" url('./static/images/bg2.png')"
+            }) 
+            $('#time').css({
+                backgroundImage:" url('./static/images/bg3.png')"
+            }) 
+            $('#rocket-bg').css({
+                backgroundImage:" url('./static/images/bg.png')"
+            })
+
+            rocketInit();
+            $('.arrow').show()
+
+        },500)
+
+
+
+        
+    },(e)=>{
+        console.log(e)
+    })
+
+
+
+    // // delay rendering bootstrap
+    // setTimeout(function () {
+    //     onResize();
+    //     protectInter();
+    // }, 10);
+
+</script>
+<script>
+    let scrollBox = document.querySelector('.scroll-box');
+    document.addEventListener("touchmove", function (e) {
+        return false
+    }, false);
+
+   
+
+
+
+    var flag = 1;
+    var curPage = 1;
+    var canTouch = true;
+    var PageL = 3;
+
+
+    console.log(curPage)
+
+    var startY, endY, diff;
+    document.body.addEventListener("touchstart", touchStart, false);
+    document.body.addEventListener("touchmove", touchMove, false);
+    document.body.addEventListener("touchend", touchEnd, false);
+
+    function touchStart(e) {
+        var touch = e.touches[0];
+        startY = touch.pageY;
+    }
+
+    function touchMove(e) {
+        var touch = e.touches[0];
+        endY = touch.pageY;
+        diff = endY - startY;
+    }
+
+
+    function touchEnd(e) {
+        if (Math.abs(diff) > 150 && canTouch) {
+            if (diff > 0) {
+                if (curPage <= 1) {
+                    return;
+                }
+
+                curPage--;
+
+            } else {
+                if (curPage >= PageL) {
+                    return;
+                }
+                curPage++;
+
+                if (curPage >= PageL) {
+                    document.querySelector('.arrow').style.display = 'hidden';
+                } else {
+                    document.querySelector('.arrow').style.display = 'block';
+                }
+            }
+
+            scrollBox.style.transform = `translate(0, -${(curPage-1)*100}%)`;
+
+            canTouch = false;
+            setTimeout(function () {
+                canTouch = true;
+                diff = 0;
+
+                if(++flag===2){
+                   onResize();
+                   protectInter();
+                }
+
+                if(++flag===3){
+                    reserveTime();
+                }
+
+            }, 600);
+        }
+    }
+
+    function reserveTime() {
+
+
+        let oldYear = 2012;
+        let curYear = new Date().getFullYear();
+        let deepYear = curYear - oldYear;
+
+        // $('.fixed-warp').prepend('<h1 class="bottom route-tiem">'+deepYear+'</h1>');
+        // $('style').append(`<style >   
+        //     .bottom::before, .bottom::after{
+        //         content:"${deepYear}";
+        //     }
+        // </h1>`);
+        // $('route-tiem').attr("data-content",deepYear)
+
+        $('style').append(`<style >   
+           .text::after{
+                content:"${deepYear}";
+            }
+        </h1>`);
+        $('route-tiem').attr("data-text",deepYear)
+
+
+        var myDate = curYear+'/05/19 09:00:00'
+
+        $('.dowebok').flipTimer({
+            days:true,
+            direction: 'up',
+            date: myDate
+        });
+
+    }
+</script>
+
+
+<script></script>
+</body>
+</html>
