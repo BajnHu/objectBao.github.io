@@ -88,7 +88,7 @@
 
 
         .route-tiem{ 
-            font-size: 25em; 
+            font-size: 6em; 
             margin: 200px auto; 
          }
 
@@ -390,6 +390,12 @@
 
                 if(++flag===3){
                     reserveTime();
+                }
+                if(curPage===3){
+                    $('.arrow').hide()
+                }else{
+                    $('.arrow').show()
+
                 }
 
             }, 600);
